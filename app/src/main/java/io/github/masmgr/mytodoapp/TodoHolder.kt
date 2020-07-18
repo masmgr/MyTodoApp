@@ -9,4 +9,5 @@ import kotlinx.android.synthetic.main.todo_item.view.*
 class TodoHolder(val view: View): RecyclerView.ViewHolder(view) {
     val title = view.title
     val detail = view.detail
+    var registerDate = view.register_date
 }

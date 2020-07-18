@@ -1,3 +1,5 @@
 package io.github.masmgr.mytodoapp
 
-class TodoItem(var Title: String?, var Detail: String?)
+import java.util.*
+
+class TodoItem(var Title: String?, var Detail: String?, var RegisterDate: Date)

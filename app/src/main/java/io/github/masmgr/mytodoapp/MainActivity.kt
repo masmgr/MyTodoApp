@@ -20,7 +20,10 @@ class MainActivity : AppCompatActivity() {
         main_recycler_view.setHasFixedSize(true)
 
         add_item_button.setOnClickListener {
-            mainViewModel.addItem(text_title.text?.toString(), text_detail.text?.toString());
+            mainViewModel.addItem(
+                text_title.text?.toString(),
+                text_detail.text?.toString()
+            );
         }
 
         mainViewModel.todo.observe(this, Observer {

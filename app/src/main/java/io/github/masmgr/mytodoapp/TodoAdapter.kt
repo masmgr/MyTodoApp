@@ -4,8 +4,10 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.todo_item.view.*
+import java.text.SimpleDateFormat
+import java.util.*
 
-class TodoAdapter() : RecyclerView.Adapter<TodoHolder>(){
+class TodoAdapter() : RecyclerView.Adapter<TodoHolder>() {
     private val todoList = mutableListOf<TodoItem>();
 
     fun setItem(item: TodoItem) {
@@ -22,9 +24,13 @@ class TodoAdapter() : RecyclerView.Adapter<TodoHolder>(){
     override fun getItemCount(): Int = todoList.size
 
     override fun onBindViewHolder(holder: TodoHolder, position: Int) {
-        holder.view.let{
-            it.title.text = todoList[position].Title
-            it.detail.text = todoList[position].Detail
+        holder.view.let {
+            val item = todoList[position]
+            it.title.text = item.Title
+            it.detail.text = item.Detail
+            it.register_date.text = SimpleDateFormat(
+                "yyyy/MM/dd hh:mm:ss"
+            ).format(item.RegisterDate)
         }
     }
 }
