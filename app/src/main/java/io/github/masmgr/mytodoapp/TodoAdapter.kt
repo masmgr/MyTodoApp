@@ -21,6 +21,10 @@ class TodoAdapter(
         notifyItemRemoved(position)
     }
 
+    fun move(fromPosition: Int, toPosition: Int) {
+        notifyItemMoved(fromPosition, toPosition)
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TodoHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         val item = layoutInflater.inflate(R.layout.todo_item, parent, false)

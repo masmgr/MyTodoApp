@@ -12,20 +12,26 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_main.*
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
     private val mainViewModel = MainViewModel()
-    lateinit var adapter: TodoAdapter
+    private lateinit var adapter: TodoAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         adapter = TodoAdapter(
-            mutableListOf(),
-            listener = object : TodoAdapter.ListListener {
-                override fun onClickRow(view: View, todoItem: TodoItem) {
-                    Toast.makeText(applicationContext, todoItem.Title, Toast.LENGTH_LONG).show()
+            MutableList(50) { i ->
+                 TodoItem("List ${i+1}", "This is ${i+1} item.", Date())
+            },
+            object : TodoAdapter.ListListener {
+                override fun onClickRow(view: View, rowModel: TodoItem) {
+                    val toast =
+                        Toast.makeText(applicationContext, rowModel.Title, Toast.LENGTH_LONG)
+                    // toast.setGravity(Gravity.TOP, 0, 0)
+                    toast.show()
                 }
             }
         )
@@ -48,10 +54,9 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
-
     private fun getSwipeToDismissTouchHelper(adapter: TodoAdapter) =
         ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(
-            ItemTouchHelper.RIGHT,
+            ItemTouchHelper.UP or ItemTouchHelper.DOWN or ItemTouchHelper.RIGHT,
             ItemTouchHelper.RIGHT
         ) {
             override fun onMove(
@@ -59,7 +64,10 @@ class MainActivity : AppCompatActivity() {
                 viewHolder: RecyclerView.ViewHolder,
                 target: RecyclerView.ViewHolder
             ): Boolean {
-                return false
+                val fromPosition = viewHolder.adapterPosition
+                val toPosition = target.adapterPosition
+                adapter.move(fromPosition, toPosition)
+                return true
             }
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
