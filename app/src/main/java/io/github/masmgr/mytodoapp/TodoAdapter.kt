@@ -1,18 +1,24 @@
 package io.github.masmgr.mytodoapp
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.todo_item.view.*
 import java.text.SimpleDateFormat
 import java.util.*
 
-class TodoAdapter() : RecyclerView.Adapter<TodoHolder>() {
-    private val todoList = mutableListOf<TodoItem>();
-
+class TodoAdapter(
+    private val todoList: MutableList<TodoItem>,
+    private val listener: ListListener
+) : RecyclerView.Adapter<TodoHolder>() {
     fun setItem(item: TodoItem) {
         todoList.add(item)
         notifyDataSetChanged()
+    }
+
+    fun remove(position: Int) {
+        todoList.removeAt(position)
+        notifyItemRemoved(position)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TodoHolder {
@@ -24,13 +30,18 @@ class TodoAdapter() : RecyclerView.Adapter<TodoHolder>() {
     override fun getItemCount(): Int = todoList.size
 
     override fun onBindViewHolder(holder: TodoHolder, position: Int) {
-        holder.view.let {
-            val item = todoList[position]
-            it.title.text = item.Title
-            it.detail.text = item.Detail
-            it.register_date.text = SimpleDateFormat(
-                "yyyy/MM/dd hh:mm:ss"
-            ).format(item.RegisterDate)
+        val item = todoList[position]
+        holder.titleView.text = item.Title
+        holder.detailView.text = item.Detail
+        holder.registerDateView.text = SimpleDateFormat(
+            "yyyy/MM/dd hh:mm:ss", Locale.JAPAN
+        ).format(item.RegisterDate)
+        holder.view.setOnClickListener {
+            listener.onClickRow(it, item)
         }
+    }
+
+    interface ListListener {
+        fun onClickRow(view: View, rowModel: TodoItem)
     }
 }
